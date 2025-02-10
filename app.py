@@ -14,6 +14,9 @@ import uuid
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.service import Service
+import chromedriver_autoinstaller
+
+chromedriver_autoinstaller.install()
 
 chrome_options = Options()
 chrome_options.binary_location = "/usr/bin/google-chrome" 
