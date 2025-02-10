@@ -24,4 +24,4 @@ COPY . .
 EXPOSE 5000
 
 # Start the application
-CMD ["gunicorn", "-b", "0.0.0.0:$PORT", "app:app"]
+CMD ["sh", "-c", "gunicorn -b 0.0.0.0:$PORT app:app"]
