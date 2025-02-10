@@ -12,21 +12,24 @@ from selenium.webdriver.common.keys import Keys
 import time
 import uuid
 from selenium.webdriver.chrome.options import Options
-from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.service import Service
 
+# Set up Chrome options
 chrome_options = Options()
-chrome_options.binary_location = "/usr/bin/google-chrome"  
+chrome_options.binary_location = "/usr/bin/google-chrome"
 chrome_options.add_argument("--headless")
 chrome_options.add_argument("--no-sandbox")
 chrome_options.add_argument("--disable-dev-shm-usage")
 
-# Use the correct ChromeDriver path inside Docker
-service = Service("/usr/local/bin/chromedriver")
-service.start()  # Explicitly start the service
+# Ensure ChromeDriver has the correct path and permissions
+chrome_driver_path = "/usr/local/bin/chromedriver"
+os.chmod(chrome_driver_path, 0o755)  # Make sure it's executable
 
+# Start the ChromeDriver service
+service = Service(chrome_driver_path)
 driver = webdriver.Chrome(service=service, options=chrome_options)
 
+# Initialize Flask app
 app = Flask(__name__)
 
 UPLOAD_FOLDER = os.path.abspath('uploads/')
@@ -42,11 +45,9 @@ global_search_data = {
     "image_paths": []
 }
 
-
 @app.route('/')
 def index():
     return render_template('index.html')
-
 
 @app.route('/upload', methods=['POST'])
 def upload_image():
@@ -75,7 +76,6 @@ def upload_image():
 
     return process_next_country()
 
-
 def process_next_country():
     global global_search_data
     index = global_search_data["current_country_index"]
@@ -87,7 +87,6 @@ def process_next_country():
     global_search_data["product_data"][country] = products
     return render_template('results.html', products=products, current_country=country, next_available=True,
                            final_step=False)
-
 
 def reverse_image_search_multiple(image_paths, country):
     wait = WebDriverWait(driver, 30)
@@ -120,10 +119,9 @@ def reverse_image_search_multiple(image_paths, country):
                 product_details = extract_product_details(product_link)
                 if product_details:
                     results.append(product_details)
-    finally:
-        driver.quit()
+    except Exception as e:
+        print(f"Error in image search: {e}")
     return results
-
 
 def extract_product_details(product_link):
     try:
@@ -171,7 +169,6 @@ def extract_product_details(product_link):
         print(f"Error extracting product details: {e}")
         return None
 
-
 @app.route('/next-country')
 def next_country():
     global global_search_data
@@ -180,7 +177,6 @@ def next_country():
         return render_template('no_more_countries.html')
     return process_next_country()
 
-
 @app.route('/auto-download/<country>')
 def auto_download(country):
     df = pd.DataFrame(global_search_data["product_data"].get(country, []))
@@ -188,7 +184,6 @@ def auto_download(country):
     df.to_excel(excel_io, index=False, engine='xlsxwriter')
     excel_io.seek(0)
     return send_file(excel_io, download_name=f'{country}.xlsx', as_attachment=True)
-
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
