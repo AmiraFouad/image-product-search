@@ -22,8 +22,11 @@ chrome_options.add_argument("--no-sandbox")
 chrome_options.add_argument("--disable-dev-shm-usage")
 
 # Use the correct ChromeDriver path inside Docker
-service = Service("/usr/local/bin/chromedriver")  
+service = Service("/usr/local/bin/chromedriver")
+service.start()  # Explicitly start the service
+
 driver = webdriver.Chrome(service=service, options=chrome_options)
+
 app = Flask(__name__)
 
 UPLOAD_FOLDER = os.path.abspath('uploads/')
