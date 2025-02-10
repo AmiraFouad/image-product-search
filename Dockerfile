@@ -12,12 +12,14 @@ RUN apt-get update && apt-get install -y wget curl unzip \
     && wget -q https://chromedriver.storage.googleapis.com/$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE)/chromedriver_linux64.zip \
     && unzip chromedriver_linux64.zip \
     && mv chromedriver /usr/local/bin/ \
+    && chmod +x /usr/local/bin/chromedriver \
     && rm chromedriver_linux64.zip \
     && apt-get clean
 
 # Set Chrome and ChromeDriver environment variables
 ENV GOOGLE_CHROME_BIN="/usr/bin/google-chrome"
 ENV CHROMEDRIVER_PATH="/usr/local/bin/chromedriver"
+ENV PATH="${PATH}:/usr/local/bin/"
 
 # Install Python dependencies
 COPY requirements.txt .
