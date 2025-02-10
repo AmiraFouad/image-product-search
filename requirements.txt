@@ -1,0 +1,8 @@
+Flask
+requests
+pandas
+beautifulsoup4
+selenium
+webdriver-manager
+gunicorn
+xlsxwriter
