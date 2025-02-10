@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results</title>
+    <script>
+        function startNewSearch() {
+            window.location.href = "/";
+        }
+
+        function nextCountry() {
+            window.location.href = "/next-country";
+        }
+
+        function downloadResults(country) {
+            window.location.href = "/auto-download/" + country;
+        }
+    </script>
+</head>
+<body>
+    <h1>Product Search Results</h1>
+
+    {% if products %}
+        <h2>Results for {{ current_country }}</h2>
+        <table border="1">
+            <tr>
+                <th>Website</th>
+                <th>Product Name</th>
+                <th>Price</th>
+                <th>Description</th>
+                <th>Link</th>
+            </tr>
+            {% for product in products %}
+            <tr>
+                <td>{{ product.website }}</td>
+                <td>{{ product.product_name }}</td>
+                <td>{{ product.price }}</td>
+                <td>{{ product.description }}</td>
+                <td><a href="{{ product.product_link }}" target="_blank">View</a></td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        <button onclick="downloadResults('{{ current_country }}')">Download {{ current_country }} Results</button>
+
+        {% if next_available %}
+            <button onclick="nextCountry()">Next Country</button>
+        {% endif %}
+
+        <button onclick="startNewSearch()">Start Over</button>
+    {% else %}
+        <p>No products found.</p>
+        <button onclick="startNewSearch()">Try Again</button>
+    {% endif %}
+</body>
+</html>
