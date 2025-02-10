@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Search</title>
+</head>
+<body>
+    <h1>Upload an Image to Search for Products</h1>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="files" multiple required>
+        <h2>Select Search Locations:</h2>
+        <label><input type="checkbox" name="countries" value="egypt"> Egypt</label><br>
+        <label><input type="checkbox" name="countries" value="saudi arabia"> Saudi Arabia</label><br>
+        <label><input type="checkbox" name="countries" value="united arab emirates"> United Arab Emirates</label><br>
+        <label><input type="checkbox" name="countries" value="aliexpress alibaba"> Aliexpress Alibaba</label><br>
+        <label><input type="checkbox" id="selectAll"> Select All</label>
+        <br><br>
+        <button type="submit">Search</button>
+    </form>
+
+    <script>
+        document.getElementById("selectAll").addEventListener("change", function() {
+            const checkboxes = document.querySelectorAll("input[name='countries']");
+            checkboxes.forEach(checkbox => checkbox.checked = this.checked);
+        });
+    </script>
+</body>
+</html>
