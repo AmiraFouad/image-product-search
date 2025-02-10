@@ -1,8 +1,8 @@
 Flask
+gunicorn
 requests
-pandas
-beautifulsoup4
 selenium
 webdriver-manager
-gunicorn
+beautifulsoup4
+pandas
 xlsxwriter
